@@ -1,0 +1,113 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ruiner Finder — найди руинера в катке Dota 2</title>
+  <meta name="description" content="Вставь ID матча Dota 2 и узнай, кто руинил: оценка каждого игрока относительно других игроков на том же герое.">
+  <meta name="theme-color" content="#0F0F23">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Ccircle cx='14' cy='14' r='7' fill='none' stroke='white' stroke-width='3'/%3E%3Cpath d='M19 19l6 6' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700&family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержимому</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="./" aria-label="Ruiner Finder — на главную">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><circle cx="14" cy="14" r="7"/><path d="M19 19l6 6"/></svg>
+        <span>Ruiner<span class="logo-accent">Finder</span></span>
+      </a>
+      <nav aria-label="Основная навигация">
+        <a href="#how">Как считаем</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">Dota 2 · анализ матча</p>
+        <h1>Кто зарунил катку?</h1>
+        <p class="lead">Вставь ID матча — сравним каждого игрока с тысячами других на том же герое и покажем, кто тащил, а кто кормил.</p>
+
+        <div class="search-card">
+          <div class="tabs" role="tablist" aria-label="Способ поиска">
+            <button class="tab" role="tab" id="tab-match" aria-selected="true" aria-controls="panel-match">По матчу</button>
+            <button class="tab" role="tab" id="tab-player" aria-selected="false" aria-controls="panel-player" tabindex="-1">Мои последние игры</button>
+          </div>
+
+          <form id="panel-match" class="search-form" role="tabpanel" aria-labelledby="tab-match" novalidate>
+            <label for="match-input">ID матча или ссылка</label>
+            <div class="input-row">
+              <input id="match-input" name="match" type="text" inputmode="text" autocomplete="off" spellcheck="false"
+                     placeholder="например, 9049094334" aria-describedby="match-help match-error">
+              <button class="btn btn-primary" type="submit">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                Найти руинера
+              </button>
+            </div>
+            <p id="match-help" class="help">Подойдут ссылки с Dotabuff, OpenDota и STRATZ.
+              <button type="button" class="link-btn" id="example-btn">Показать на примере</button></p>
+            <p id="match-error" class="field-error" role="alert" hidden></p>
+          </form>
+
+          <form id="panel-player" class="search-form" role="tabpanel" aria-labelledby="tab-player" novalidate hidden>
+            <label for="player-input">Steam ID, Friend ID или ссылка на профиль</label>
+            <div class="input-row">
+              <input id="player-input" name="player" type="text" autocomplete="off" spellcheck="false"
+                     placeholder="например, 76561198..." aria-describedby="player-help player-error">
+              <button class="btn btn-primary" type="submit">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>
+                Показать игры
+              </button>
+            </div>
+            <p id="player-help" class="help">Friend ID есть в клиенте Dota (Друзья → Добавить друга). Профиль должен быть открыт.</p>
+            <p id="player-error" class="field-error" role="alert" hidden></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="results" class="container results" aria-live="polite" aria-busy="false"></section>
+
+    <section id="how" class="container how">
+      <h2>Как считаем</h2>
+      <div class="how-grid">
+        <article class="how-card">
+          <svg class="icon icon-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>
+          <h3>Сравнение с героем</h3>
+          <p>OpenDota знает, как обычно играют на каждом герое. Для каждого показателя берём перцентиль: 80% — лучше, чем у 80% игроков на этом герое.</p>
+        </article>
+        <article class="how-card">
+          <svg class="icon icon-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18"/><path d="M5 8h14"/><path d="m5 8-3 7a4 4 0 0 0 6 0Z"/><path d="m19 8-3 7a4 4 0 0 0 6 0Z"/></svg>
+          <h3>Взвешенная оценка</h3>
+          <p>Смерти весят больше всего (25%), дальше золото и урон по героям (по 15%), опыт, убийства, помощь, добивания (по 10%) и урон по строениям (5%).</p>
+        </article>
+        <article class="how-card">
+          <svg class="icon icon-lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+          <h3>Руин-метр 0–100</h3>
+          <p>Чем выше, тем хуже игра относительно нормы. Ливнул из игры — сразу 95+. Это ориентир для споров в чате, а не приговор: цифры не видят варды, смоки и сейвы.</p>
+        </article>
+      </div>
+      <ul class="scale" aria-label="Шкала руин-метра">
+        <li class="lvl-carry"><span class="dot"></span>0–34 Тащил</li>
+        <li class="lvl-ok"><span class="dot"></span>35–54 Норм</li>
+        <li class="lvl-sus"><span class="dot"></span>55–74 Подозрительно</li>
+        <li class="lvl-ruin"><span class="dot"></span>75–100 Руинер</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Данные — <a href="https://www.opendota.com" target="_blank" rel="noopener">OpenDota API</a>. Проект не связан с Valve. Dota 2 — товарный знак Valve Corporation.</p>
+    </div>
+  </footer>
+
+  <script src="app.js?v=3"></script>
+</body>
+</html>
