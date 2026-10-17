@@ -71,6 +71,7 @@
 
   let heroes = null;
   let currentRequest = 0;
+  let lastSearch = location.search;
 
   // ---------- helpers ----------
 
@@ -463,7 +464,7 @@
 
   async function loadMatch(id, { push = true } = {}) {
     const req = ++currentRequest;
-    if (push) history.pushState({ match: id }, '', `?match=${id}`);
+    if (push) { history.pushState({ match: id }, '', `?match=${id}`); lastSearch = location.search; }
     document.title = `Матч ${id} — Ruiner Finder`;
     setBusy(true);
     renderLoading('Ищем руинера');
@@ -483,7 +484,7 @@
 
   async function loadPlayer(accountId, { push = true } = {}) {
     const req = ++currentRequest;
-    if (push) history.pushState({ player: accountId }, '', `?player=${accountId}`);
+    if (push) { history.pushState({ player: accountId }, '', `?player=${accountId}`); lastSearch = location.search; }
     document.title = 'Последние игры — Ruiner Finder';
     setBusy(true);
     renderLoading('Загружаем последние игры');
@@ -604,7 +605,12 @@
     }
   }
 
-  window.addEventListener('popstate', routeFromUrl);
+  // Клик по якорю (#how) тоже вызывает popstate — перерисовываем только если сменился запрос.
+  window.addEventListener('popstate', () => {
+    if (location.search === lastSearch) return;
+    lastSearch = location.search;
+    routeFromUrl();
+  });
   routeFromUrl();
   loadHeroes().catch(() => { /* загрузим при запросе */ });
 })();
